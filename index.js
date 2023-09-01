@@ -1,5 +1,6 @@
 import express from "express";
-
+import mongoose from "mongoose";
+import e from "express";
 
 const app = express();
 const port = 3000;
@@ -24,22 +25,73 @@ function getDate() {
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: true}));
 
-app.get("/", (req, res) => {
-    res.render("index.ejs", {date: getDate()});
+// Connect to mongoDB
+mongoose.connect("mongodb://127.0.0.1:27017/todolistDB");
+// Create a schema
+const itemSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "Items cannot be blank"]
+    }
+})
+// Create a model
+const Item = mongoose.model("Item", itemSchema);
+
+// Create some default items
+const item1 = new Item({
+    name: "Welcome to your todolist!"
 });
 
+const item2 = new Item({
+    name: "Hit the add button to add a new item."
+});
+
+const item3 = new Item({
+    name: "<-- Hit this to delete an item."
+});
+
+const defaultItems = [item1, item2, item3];
+
+/*Item.insertMany(defaultItems)
+    .then(function () {
+        console.log("Successfully saved default items to todolistDB");
+    })
+    .catch((err)=>console.log(err));*/
+
+app.get("/", (req, res) => {
+    Item.find({})
+        .then((foundItems) => {
+            if (foundItems.length === 0) {
+                Item.insertMany(defaultItems)
+                    .then(function () {
+                        console.log("Successfully saved default items to todolistDB");
+                    })
+                    .catch((err)=>console.log(err));
+                // after insert items, redirect to the else branch
+                res.redirect("/");
+            } else {
+                res.render("index.ejs", {list: foundItems, date: getDate(),})}})
+        .catch((err) => console.log(err));
+
+});
 
 app.post("/submit", (req, res) => {
-    toDoList.push(req.body["content"]);
-    res.render("index.ejs", {
-        list: toDoList,
-        len: toDoList.length,
-        date: getDate(),
+    const itemName = req.body["content"];
+    const newItem = new Item({
+        name: itemName,
     });
+    newItem.save();
+
+    res.redirect("/");
 })
 
-
-
+app.post("/delete", (req, res) => {
+    const checkItemId = req.body.checkbox;
+    Item.findOneAndDelete({_id: checkItemId})
+        .then((deletedItem) => console.log(`${deletedItem.name} is deleted.`))
+        .catch((err) => console.log(err))
+        .finally(() => res.redirect("/"))
+});
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
