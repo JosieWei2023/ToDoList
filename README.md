@@ -1,2 +1,2 @@
-# ejs-todolist
-A simple to-do-list using ejs
+# todolist
+A simple to-do-list web
