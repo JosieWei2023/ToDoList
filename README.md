@@ -116,7 +116,7 @@ Additionally, I would like to express my gratitude to my instructor [Angela Yu](
 
 ## 🚀 About Me
 
-* I'm a first year undergraduate in Northeastern University.
+* I'm a first year postgraduate in Northeastern University.
 
 
 ### Contact Details
