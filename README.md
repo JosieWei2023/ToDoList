@@ -56,19 +56,19 @@ To run the To-Do List App, perform the following actions:
 4. Launch the MongoDB shell:
 
    ```bash
-   mongosh
+   mongo
    ```
 
 5. Open another PowerShell window and Navigate to the project directory:
 
    ```bash
-   cd To-Do-List-App
+   cd ToDoList
    ```
 
 6. Start the application using nodemon:
 
    ```bash
-   nodemon .\app.js
+   nodemon .\index.js
    ```
 
 7. Open a web browser and navigate to [localhost:3000](http://localhost:3000) to access the application. Use [localhost:3000/work](http://localhost:3000/work) and whatever you want to create new todo list.
@@ -87,7 +87,7 @@ The project structure is as follows:
 
 * `index.js:` The main entry point of the application. It configures the server, sets up the routes, and connects to the database.
    
-   **Models:** "_app.js_" contains the Mongoose models for the database schema.
+   **Models:** "_index.js_" contains the Mongoose models for the database schema.
 
    * `Item:` The model for individual to-do list items.
    * `List:` The model for the custom lists.
